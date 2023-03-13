@@ -1,15 +1,4 @@
-using namespace std;
-
-struct Node
-{
-    Node *prev_node;
-    string surname = "";
-    string name = "";
-    int birth_date = 0;
-    int grade = 0;
-    float performance = 0;
-    Node *next_node;
-};
+#include "2.3.back.h"
 
 void create_node(Node *&top)
 {
@@ -31,17 +20,17 @@ void create_node(Node *&top)
 
     student->performance = float(rand() % 6 + 4) + float(rand() % 10) / 10;
 
-    student->next_node = NULL;
+    student->next = NULL;
 
     if (!top)
 		top = student;
     else
     {
         Node *curr_node = top;
-        while(curr_node->next_node)
-            curr_node = curr_node->next_node;
+        while(curr_node->next)
+            curr_node = curr_node->next;
         student->prev_node = curr_node;
-	    curr_node->next_node = student;
+	    curr_node->next = student;
     }
 }
 
@@ -61,7 +50,7 @@ void print_list(Node *top)
             << setw(6) << (top->birth_date / 10000000) << (top->birth_date / 1000000) % 10 << "." 
                 << (top->birth_date / 100000) % 10 << (top->birth_date / 10000) % 10 << "." 
                 << top->birth_date % 10000 << endl;
-        top = top->next_node;
+        top = top->next;
     }
 }
 
@@ -77,7 +66,7 @@ void sort(Node *top)
     int temp_grade = 0;
     float temp_performance = 0;
 
-    while(current_node && current_node->next_node)
+    while(current_node && current_node->next)
     {
         temp = current_node;
         min = current_node;
@@ -86,7 +75,7 @@ void sort(Node *top)
         {
             if (temp->surname < min->surname)
                 min = temp;
-            temp = temp->next_node;
+            temp = temp->next;
         }
 
         temp_surname = min->surname;
@@ -107,6 +96,6 @@ void sort(Node *top)
         current_node->grade = temp_grade;
         current_node->performance = temp_performance;
 
-        current_node = current_node->next_node;
+        current_node = current_node->next;
     }
 }
