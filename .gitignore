@@ -1,5 +1,0 @@
-# Build dirs (when bulding multiply files with headers and other stuff)
-build
-
-# C++ executables
-*.exe
