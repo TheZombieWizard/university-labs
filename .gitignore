@@ -1,0 +1,14 @@
+# Build dirs (when bulding multiply files with headers and other stuff)
+build
+<<<<<<< HEAD
+*.o
+
+# C++ executables
+*.exe
+
+*.txt
+=======
+
+# C++ executables
+*.exe
+>>>>>>> 9663d53f65f109cebe452a230c00fdbd4cda79dc

@@ -1,17 +1,6 @@
-using namespace std;
+#include "2.3.back.h"
 
-struct Node
-{
-    Node *prev_node;
-    string surname = "";
-    string name = "";
-    int birth_date = 0;
-    int grade = 0;
-    float performance = 0;
-    Node *next;
-};
-
-void create_node(Node *&top)
+void create_node_rand(Node *&top)
 {
     Node* student = new Node;
 
@@ -30,6 +19,32 @@ void create_node(Node *&top)
     student->grade = rand() % 4 + 1;
 
     student->performance = float(rand() % 6 + 4) + float(rand() % 10) / 10;
+
+    student->next = NULL;
+
+    if (!top)
+		top = student;
+    else
+    {
+        Node *curr_node = top;
+        while(curr_node->next)
+            curr_node = curr_node->next;
+        student->prev_node = curr_node;
+	    curr_node->next = student;
+    }
+}
+
+void create_node(Node *&top, string surname, string name, int birth_date, short grade, float performance)
+{
+    Node* student = new Node;
+
+    student->prev_node = NULL;
+
+    student->surname = surname;
+    student->name = name;
+    student->birth_date = birth_date;  
+    student->grade = grade;
+    student->performance = performance;
 
     student->next = NULL;
 
@@ -108,5 +123,23 @@ void sort(Node *top)
         current_node->performance = temp_performance;
 
         current_node = current_node->next;
+    }
+}
+
+void modify_list(Node *original_list, Node *&modified_list, char desired_letter)
+{
+    Node *current_original_node = original_list;
+    
+    while(current_original_node)
+    {
+        if ((current_original_node->surname[0] == desired_letter) || 
+            (current_original_node->surname[0] == desired_letter - 32))
+        {
+            create_node(modified_list, current_original_node->surname, current_original_node->name,
+                current_original_node->birth_date, current_original_node->grade, current_original_node->performance);
+            current_original_node->prev_node->next = current_original_node->next;
+            current_original_node->next->prev_node = current_original_node->prev_node;
+        }
+        current_original_node = current_original_node->next;
     }
 }
