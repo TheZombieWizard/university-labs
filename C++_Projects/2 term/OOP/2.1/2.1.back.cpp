@@ -15,7 +15,7 @@ Vector :: Vector(unsigned int desired_length)
         vector_values[i] = 0;
 }
 
-Vector :: Vector() : Vector(13) {}
+Vector :: Vector() : Vector(1) {}
 
 Vector :: ~ Vector()
 {
@@ -28,7 +28,12 @@ Vector :: Vector(const Vector &copying_vector)
 {
     memory_vector_length = copying_vector.memory_vector_length;
     effective_vector_length = copying_vector.effective_vector_length;
-    vector_values = copying_vector.vector_values;
+    vector_values = new int[memory_vector_length];
+
+    for (unsigned int index = 0; index < copying_vector.effective_vector_length; index++)
+        vector_values[index] = copying_vector.vector_values[index];
+
+    cout << "   // Copy construction //    " << endl;
 }
 
 Vector& Vector:: operator= (const Vector& copying_vector)
@@ -37,32 +42,26 @@ Vector& Vector:: operator= (const Vector& copying_vector)
     
     for (unsigned int index = 0; index < copying_vector.effective_vector_length; index++)
         vector_values[index] = copying_vector.vector_values[index];
-    
+    cout << "   // Copy operator //    " << endl;
     return *this;  
 }
 
 Vector :: Vector(Vector&& copying_vector)
 {
-    memory_vector_length = copying_vector.memory_vector_length;
-    effective_vector_length = copying_vector.effective_vector_length;
-    
-    vector_values = copying_vector.vector_values;
+    swap(memory_vector_length, copying_vector.memory_vector_length);
+    swap(effective_vector_length, copying_vector.effective_vector_length);
+    swap(vector_values, copying_vector.vector_values);
+
     delete []copying_vector.vector_values;
-    
     copying_vector.memory_vector_length = 0;
     copying_vector.effective_vector_length = 0;
 }
 
 Vector& Vector :: operator=(Vector&& copying_vector)
 {   
-    memory_vector_length = copying_vector.memory_vector_length;
-    effective_vector_length = copying_vector.effective_vector_length;
-    
-    vector_values = copying_vector.vector_values;
-    delete []copying_vector.vector_values;
-    
-    copying_vector.memory_vector_length = 0;
-    copying_vector.effective_vector_length = 0;
+    swap(this->memory_vector_length, copying_vector.memory_vector_length);
+    swap(this->effective_vector_length, copying_vector.effective_vector_length);
+    swap(this->vector_values, copying_vector.vector_values);
     
     return *this;
 }
@@ -118,11 +117,14 @@ void Vector :: extend_length(unsigned int desired_length)
         vector_values = new_vector_values;
         effective_vector_length = desired_length;
     }
+    else if (desired_length > effective_vector_length)
+        effective_vector_length = desired_length;
+
 }
 
 void Vector:: fill_random(int left_border, int right_border)
 {
-    srand(time(NULL));
+    srand(time(NULL) + rand() % 42);
     for (unsigned int index = 0; index < effective_vector_length; index++)
         vector_values[index] = rand() % right_border + left_border;
 }

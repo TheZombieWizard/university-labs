@@ -1,15 +1,15 @@
 #include <iostream>
 #include <cstdlib>
-#include <typeinfo>
+#include <fstream>
 
 using namespace std;
 
 
 class Vector
 {
-    unsigned int memory_vector_length = 0;
-    unsigned int effective_vector_length = 0;
-    int* vector_values = new int[memory_vector_length];
+    unsigned int memory_vector_length;
+    unsigned int effective_vector_length;
+    int* vector_values;
 
 public:
     Vector(unsigned int desired_length);
