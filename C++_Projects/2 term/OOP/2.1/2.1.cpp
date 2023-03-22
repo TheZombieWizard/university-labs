@@ -24,6 +24,6 @@ int main()
     
     for (; index <= MAX; index++)
         cout << index << " ";
-    
+
     return 0;
 }

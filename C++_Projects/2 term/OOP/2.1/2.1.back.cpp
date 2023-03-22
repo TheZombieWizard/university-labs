@@ -118,10 +118,6 @@ void Vector :: extend_length(unsigned int desired_length)
         vector_values = new_vector_values;
         effective_vector_length = desired_length;
     }
-    else
-    {
-        effective_vector_length = desired_length;
-    }
 }
 
 void Vector:: fill_random(int left_border, int right_border)
