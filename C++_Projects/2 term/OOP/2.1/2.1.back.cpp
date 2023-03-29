@@ -32,8 +32,6 @@ Vector :: Vector(const Vector &copying_vector)
 
     for (unsigned int index = 0; index < copying_vector.effective_vector_length; index++)
         vector_values[index] = copying_vector.vector_values[index];
-
-    cout << "   // Copy construction //    " << endl;
 }
 
 Vector& Vector:: operator= (const Vector& copying_vector)
@@ -42,26 +40,25 @@ Vector& Vector:: operator= (const Vector& copying_vector)
     
     for (unsigned int index = 0; index < copying_vector.effective_vector_length; index++)
         vector_values[index] = copying_vector.vector_values[index];
-    cout << "   // Copy operator //    " << endl;
     return *this;  
 }
 
-Vector :: Vector(Vector&& copying_vector)
+Vector :: Vector(Vector&& moving_vector)
 {
-    swap(memory_vector_length, copying_vector.memory_vector_length);
-    swap(effective_vector_length, copying_vector.effective_vector_length);
-    swap(vector_values, copying_vector.vector_values);
+    swap(memory_vector_length, moving_vector.memory_vector_length);
+    swap(effective_vector_length, moving_vector.effective_vector_length);
+    swap(vector_values, moving_vector.vector_values);
 
-    delete []copying_vector.vector_values;
-    copying_vector.memory_vector_length = 0;
-    copying_vector.effective_vector_length = 0;
+    delete []moving_vector.vector_values;
+    moving_vector.memory_vector_length = 0;
+    moving_vector.effective_vector_length = 0;
 }
 
-Vector& Vector :: operator=(Vector&& copying_vector)
+Vector& Vector :: operator=(Vector&& moving_vector)
 {   
-    swap(this->memory_vector_length, copying_vector.memory_vector_length);
-    swap(this->effective_vector_length, copying_vector.effective_vector_length);
-    swap(this->vector_values, copying_vector.vector_values);
+    swap(this->memory_vector_length, moving_vector.memory_vector_length);
+    swap(this->effective_vector_length, moving_vector.effective_vector_length);
+    swap(this->vector_values, moving_vector.vector_values);
     
     return *this;
 }
