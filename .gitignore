@@ -2,7 +2,9 @@
 build
 <<<<<<< HEAD
 *.o
-
+# VSCode dirs and files
+.vscode
+.json
 # C++ executables
 *.exe
 
