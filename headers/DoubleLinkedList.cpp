@@ -239,15 +239,13 @@ void DoubleLinkedList<datatype> :: add_node()
         symbol = char((rand() % 26) + 97);
     
     Node<datatype>* current_node = top_node;
-    Node<datatype>* created_node = new Node<datatype>;
-    created_node->symbol = symbol;
-    created_node->prev_node = nullptr;
-    created_node->next_node = nullptr;
-
     while (current_node->next_node)
         current_node = current_node->next_node;
-    current_node->next_node = created_node;
-    created_node->prev_node = current_node;
+    
+    current_node->next_node = new Node<datatype>;
+    current_node->next_node->prev_node = current_node;
+    current_node->next_node->symbol = symbol;
+    current_node->next_node->next_node = nullptr;
 }
 
 template <class datatype>
