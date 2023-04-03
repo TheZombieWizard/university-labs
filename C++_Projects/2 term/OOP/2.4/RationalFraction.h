@@ -36,6 +36,15 @@ public:
     {
         return str << returning_fraction.numerator << "/" << returning_fraction.denominator;
     }
+    
+    friend istream& operator>>(istream& str, RationalFraction& fraction) 
+	{
+        int numerator = 0;
+        unsigned int denominator = 0;
+        str >> numerator >> denominator; 
+		fraction = RationalFraction(numerator, denominator); 
+		return str; 
+	}
 
     void reduce2nonreducable();
 };
