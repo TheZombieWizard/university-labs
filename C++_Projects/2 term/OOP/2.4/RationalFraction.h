@@ -32,6 +32,8 @@ public:
     bool operator>(const RationalFraction& fraction);
     bool operator<(const RationalFraction& fraction);
     
+    void print(char fraction_part);
+    
     friend ostream& operator<<(ostream& str, RationalFraction returning_fraction)
     {
         return str << returning_fraction.numerator << "/" << returning_fraction.denominator;

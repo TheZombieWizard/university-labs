@@ -3,6 +3,11 @@
 
 RationalFraction:: RationalFraction(int desired_numerator, unsigned int desired_denominator)
 {
+    if (!desired_denominator)
+    {
+        cout << "You can't divide by zero" << endl;
+        throw ("Zero division");
+    }
     numerator = desired_numerator;
     denominator = desired_denominator;
 }
@@ -103,27 +108,35 @@ void RationalFraction:: operator/=(const RationalFraction& fraction)
 
 bool RationalFraction:: operator==(const RationalFraction& fraction)
 {
-    return ((this->numerator * fraction.denominator / this->denominator * fraction.numerator) == 1);
+    return ((this->numerator * fraction.denominator) == (this->denominator * fraction.numerator));
 }
 
 bool RationalFraction:: operator>=(const RationalFraction& fraction)
 {
-    return ((this->numerator * fraction.denominator / this->denominator * fraction.numerator) >= 1);
+    return ((this->numerator * fraction.denominator) >= (this->denominator * fraction.numerator));
 }
 
 bool RationalFraction:: operator<=(const RationalFraction& fraction)
 {
-    return ((this->numerator * fraction.denominator / this->denominator * fraction.numerator) <= 1);
+    return ((this->numerator * fraction.denominator) <= (this->denominator * fraction.numerator));
 }
 
 bool RationalFraction:: operator>(const RationalFraction& fraction)
 {
-    return ((this->numerator * fraction.denominator / this->denominator * fraction.numerator) > 1);
+    return ((this->numerator * fraction.denominator) > (this->denominator * fraction.numerator));
 }
 
 bool RationalFraction:: operator<(const RationalFraction& fraction)
 {
-    return ((this->numerator * fraction.denominator / this->denominator * fraction.numerator) < 1);
+    return ((this->numerator * fraction.denominator) < (this->denominator * fraction.numerator));
+}
+
+void RationalFraction:: print(char fraction_part)
+{
+    if (fraction_part == 'n')
+        cout << this->numerator << " ";
+    else if (fraction_part == 'd')
+        cout << this->denominator << " ";
 }
 
 void RationalFraction:: reduce2nonreducable()
