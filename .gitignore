@@ -8,6 +8,7 @@ build
 # C++ executables
 *.exe
 
+*.bin
 *.txt
 =======
 
