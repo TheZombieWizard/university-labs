@@ -197,3 +197,9 @@ char* BigBinaryNum:: bin2dec()
 
     return numberdec;
 }
+
+void BigBinaryNum:: resize(int desired_size)
+{
+    if ((desired_size >= 0) && (desired_size <= 256))
+        size = desired_size;
+}

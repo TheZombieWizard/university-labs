@@ -27,6 +27,7 @@ public:
     void operator<(int offset);
 
     char* bin2dec();
+    void resize(int desired_size);
 
     friend ostream& operator<<(ostream& str, BigBinaryNum bigbin)
     {
