@@ -14,32 +14,10 @@ BinaryTree<datatype> :: BinaryTree(datatype symbol)
     tree_root->right = nullptr;
 }
 
-template<>
-BinaryTree<char> :: BinaryTree()
-{
-    srand(time(NULL) + rand() % 42);
-    tree_root = new Node<char>;
-    char symbol;
-    if (rand() % 2)
-        symbol = char((rand() % 26) + 65);
-    else
-        symbol = char((rand() % 26) + 97);
-    tree_root->symbol = symbol;
-    tree_root->left = nullptr;
-    tree_root->right = nullptr;
-}
-
 template <class datatype>
 BinaryTree<datatype> :: BinaryTree()
 {
-    srand(time(NULL) + rand() % 42);
-    tree_root = new Node<datatype>;
-    datatype symbol;
-    symbol = datatype(rand() % 42) + 1 + datatype((rand() % 100) / 100);
-    
-    tree_root->symbol = symbol;
-    tree_root->left = nullptr;
-    tree_root->right = nullptr;
+    tree_root = nullptr;
 }
 
 template <class datatype>
@@ -242,6 +220,15 @@ void BinaryTree<datatype> :: delete_min_node()
 template <class datatype>
 void BinaryTree<datatype> :: add_node(datatype symbol)
 {
+    if (!tree_root)
+    {
+        tree_root = new Node<datatype>;
+        tree_root->symbol = symbol;
+        tree_root->left = nullptr;
+        tree_root->right = nullptr;
+        return;
+    }
+    
     srand(time(NULL) + rand() % 42);
     Node<datatype>* current_node = tree_root;
 
