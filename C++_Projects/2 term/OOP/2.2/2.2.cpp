@@ -1,4 +1,4 @@
-#include "..\..\..\..\headers\LinearList.h"
+#include "LinearList.h"
 
 int main()
 {
