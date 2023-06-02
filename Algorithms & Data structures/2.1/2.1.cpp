@@ -1,19 +1,25 @@
 #include <fstream>
 #include <iostream>
-#include <vector>
+#include <map>
 
 using namespace std;
 
 class Graph
 {
-    vector<char> nodes;
-    vector<string> links;
+    map<char, string> graph;
+    map<char, bool> used;
 public:
     Graph(string input_file_path);    
 
     void find_sources();
     bool is_source(char source_node);
+    void find_source(char node);
     void print();
+    void dfs();
+    void bfs();
+protected:
+    void dfs(char node);
+    void bfs(char node);
 };
 
 // ----------------------------------------------------------------------------
@@ -21,8 +27,15 @@ int main()
 {
     Graph g("graph.txt");
     g.print();
+
     cout << endl << "Sources: ";
     g.find_sources();
+
+    g.dfs();
+    cout << endl;
+
+    g.bfs();
+
     return 0;
 }
 // ----------------------------------------------------------------------------
@@ -36,50 +49,65 @@ Graph:: Graph(string input_file_path)
         char node = '\0';
         string link = "";
         input_graph >> node >> link;
-        nodes.push_back(node);
-        links.push_back(link);
+        graph[node] += link;
     }
 }
 
 void Graph:: find_sources()
 {
-    for (int node_i = 0; node_i < nodes.size(); ++node_i)
+    for (auto pair : graph)
     {
-        if (is_source(nodes[node_i]))
-            cout << nodes[node_i] << " ";
+        if (is_source(pair.first))
+            cout << pair.first << " ";
     }
     cout << endl;
 }
 
 bool Graph:: is_source(char source_node)
 {
-    for (int node = 0; node < nodes.size(); ++node)
-        if (nodes[node] == source_node)
-            for (int link = 0; link < links.size(); ++link)
-                if ((links[node].find(nodes[link]) == string::npos) && (nodes[link] != source_node))
-                    return false;
+    for (auto i : graph)
+        used[i.first] = false;
     
+    find_source(source_node);
+    for (auto i : used)
+    {
+        if (!i.second)
+        {
+            used.clear();
+            return false;
+        }
+    }
+    
+    used.clear();
     return true;
+}
+
+void Graph:: find_source(char node)
+{
+    used[node] = true;
+    for (int i = 0; i < graph[node].size(); ++i)
+        if (graph[node][0] != '-')
+            find_source(graph[node][i]);
 }
 
 void Graph:: print()
 {
     cout << "  | ";
-    for (int i = 0; i < nodes.size(); ++i)
-        cout << nodes[i] << " ";
+    for (auto pair : graph)
+        cout << pair.first << " ";
     cout << endl;
     
     cout << "----";
-    for (int i = 0; i < nodes.size(); ++i)
+    for (auto pair : graph)
         cout << "--";
     cout << endl;
 
-    for (int row = 0; row < nodes.size(); ++row)
+    for (auto pair : graph)
     {
-        cout << nodes[row] << " | ";
-        for (int column = 0; column < links.size(); ++column)
+        cout << pair.first << " | ";
+        for (auto another_pair : graph)
         {
-            if (links[row].find(nodes[column]) != string::npos)
+            if (pair.second.find(another_pair.first) != string::npos)
                 cout << 1;
             else
                 cout << 0;
@@ -87,4 +115,54 @@ void Graph:: print()
         }
         cout << endl;
     }
+}
+
+void Graph:: dfs()
+{
+    for (auto pair : graph)
+        if (is_source(pair.first))
+        {
+            dfs(pair.first);
+            break;
+        }
+    used.clear();
+}
+
+void Graph:: bfs()
+{
+    for (auto pair : graph)
+        if (is_source(pair.first))
+        {
+            bfs(pair.first);
+            break;
+        }
+    used.clear();
+}
+
+void Graph:: dfs(char node)
+{
+    if (!used[node])
+        cout << node;
+    used[node] = true;
+    for (int i = 0; i < graph[node].size(); ++i)
+        if (graph[node][0] != '-')
+            dfs(graph[node][i]);
+}
+
+void Graph:: bfs(char node)
+{
+    if (!used[node])
+        cout << node;
+    used[node] = true;
+    if (graph[node][0] != '-')
+        for (int i = 0; i < graph[node].size(); ++i)
+            if (!used[graph[node][i]])
+            {
+                cout << graph[node][i];
+                used[graph[node][i]] = true;
+            }
+    
+    if (graph[node][0] != '-')
+        for (int i = 0; i < graph[node].size(); ++i)
+            bfs(graph[node][i]);
 }
