@@ -1,4 +1,3 @@
-import numpy as np
 import random
 
 # TODO:
@@ -10,9 +9,6 @@ import random
 #
 # Чтобы повысить точность, смещаем значения в сторону десятичной части: все числа матрицы делим на наибольшее. 
 #
-
-def round(number, decimals):
-    return np.round(number + 10**(-(decimals+1)), decimals)
 
 
 matrix_size = int(input("Matrix's size: "))
