@@ -10,39 +10,45 @@ import math
 # Чтобы повысить точность, смещаем значения в сторону десятичной части: все числа матрицы делим на наибольшее. 
 
 
-def magnitude(vector):
-    return math.sqrt(sum(pow(element, 2) for element in vector))
+def find_main_element(matrix, column):
+    line = column
+    for i in range(column + 1, len(matrix)):
+        if abs(matrix[i][column]) > abs(matrix[line][column]):
+            line = i
+    return line
 
 
-def solve_linear_system(matrix, vector):
+def solve_linear_system_gauss(matrix, vector):
     matrix_size = len(matrix)
-    
     # Make the values of the matrix and the vector <= 1.0.
     max_num = max([max(i) for i in matrix])
     matrix = [[num/max_num for num in matrix[line]] for line in range(matrix_size)]
     vector = [num/max_num for num in vector]
-
-    # Transform the matrix into the diagonal matrix.
-    for i in range(matrix_size):
-        for q in range(i+1, matrix_size):
-            if matrix[i][i] != 0:
-                div_multiplier = matrix[q][i] / matrix[i][i]
-                for k in range(i, matrix_size):
-                    matrix[q][k] = matrix[q][k] - matrix[i][k] * div_multiplier
-                vector[q] = vector[q] - vector[i] * div_multiplier
     
-    # Shuffle some lines to come up with true diagonal matrix (if needed).
+    # Transform the matrix into the \| matrix.
     for i in range(matrix_size):
+        k = find_main_element(matrix, i)
+        if k != i:
+            matrix[k], matrix[i] = matrix[i], matrix[k]
+            vector[k], vector[i] = vector[i], vector[k]
+        if matrix[i][i] == 0:
+            raise ValueError("")
+        vector[i] = vector[i] / matrix[i][i]
+        matrix[i] = [num/matrix[i][i] for num in matrix[i]]
         for q in range(i+1, matrix_size):
-            if matrix[i][i] == 0 and matrix[q][i] != 0:
-                matrix[i], matrix[q] = matrix[q], matrix[i]
-                vector[i], vector[q] = vector[q], vector[i]
+                if matrix[q][i] != 0:
+                    vector[q] = vector[q] / matrix[q][i]
+                    matrix[q] = [num/matrix[q][i] for num in matrix[q]]
+                    for k in range(matrix_size):
+                        matrix[q][k] -= matrix[i][k]
+                    vector[q] = vector[q] - vector[i]
 
+    print(matrix)
     # Check if the system has complete solution.
     for line in range(matrix_size-1, -1, -1):
         if sum(matrix[line][:line:]) != 0:
             return None
-    
+
     # Find the complete solution.
     matrix_parameters = [0 for _ in range(matrix_size)]
     for line in range(matrix_size-1, -1, -1):
@@ -56,26 +62,31 @@ while True:
     test_case = int(input("Number of the test case: "))
     matrix_A = []
     vector_b = None
-    with open("test_cases_for_lab1.txt", "r") as test_file:
+    with open("lab1_test_cases.txt", "r") as test_file:
         while True:
             line = test_file.readline().split()
             if line == '':
                 raise ValueError("There is no such test case.")
-            if line[0] == "test_case" and int(line[1]) == test_case:
+            if line[0] == "test_case" and line[1] == test_case:
                 break
-        matrix_A.append([int(num) for num in test_file.readline().split()])
+        matrix_A.append([float(num) for num in test_file.readline().split()])
         for i in range(len(matrix_A[0])-1):
-            matrix_A.append([int(num) for num in test_file.readline().split()])
-        vector_b = [int(num) for num in test_file.readline().split()]
-    temp_matrix_A = matrix_A
-    solution = solve_linear_system(temp_matrix_A, vector_b)
+            matrix_A.append([float(num) for num in test_file.readline().split()])
+        vector_b = [float(num) for num in test_file.readline().split()]
+    
+    solution = solve_linear_system_gauss(matrix_A, vector_b)
     print(f"Solution: {solution}")
+    
     vector_b_reverse_ingeneered = np.matmul(matrix_A, solution)
     print(f"Reverse ingeneered b: {vector_b_reverse_ingeneered}")
+    
     error_vector = np.subtract(vector_b_reverse_ingeneered, vector_b)
     print(f"Error vector: {error_vector}")
-    temp_matrix_A = matrix_A
-    solution_with_error = solve_linear_system(temp_matrix_A, vector_b_reverse_ingeneered)
+    max_abs_error_val = max([abs(i) for i in error_vector])
+    print(f"Error vectors' norm: {max_abs_error_val}")
+    
+    solution_with_error = solve_linear_system_gauss(matrix_A, vector_b_reverse_ingeneered)
     print(f"Solution with error: {solution_with_error}")
-    relative_error = magnitude(np.subtract(solution_with_error, solution)) / magnitude(solution)
+    
+    relative_error = max([abs(i) for i in np.subtract(solution_with_error, solution)]) / max([abs(i) for i in solution])
     print(f"Relative error: {relative_error}")
