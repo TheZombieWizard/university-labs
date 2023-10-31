@@ -5,6 +5,7 @@ build
 # VSCode dirs and files
 .vscode
 .json
+Java
 # C++ executables
 *.exe
 
